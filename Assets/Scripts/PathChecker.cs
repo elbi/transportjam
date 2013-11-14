@@ -5,14 +5,16 @@ using UnityEngine;
 
 public class PathChecker
 {	
-	public IList<Vector2> Search(int startX, int startY, int finishX, int finishY, int connection, Tile[,] grid, int width, int height)
+	public List<Vector2> Search(int startX, int startY, int finishX, int finishY, int connection, Tile[,] grid, int width, int height)
     {
 		bool[,] alreadySearched = new bool[width,height];
-		IList<Vector2> finalPath = new List<Vector2>();
+		List<Vector2> finalPath = finalPath = new List<Vector2>();
 		
-		Solve(startX, startY, finishX, finishY, grid, width, height, connection, alreadySearched, finalPath);
+		bool pathFound = Solve(startX, startY, finishX, finishY, grid, width, height, connection, alreadySearched, finalPath);
 		
-		return finalPath;
+		finalPath.Reverse();
+		
+		return pathFound ? finalPath : null;
     }
 	
 	private bool Solve(int currentX, int currentY, int finishX, int finishY, Tile[,] grid, int width, int height, int connection, bool[,] alreadySearched, IList<Vector2> finalPath) {
