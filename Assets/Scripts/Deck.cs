@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class CardPercentage {
 	public Card card;
-	public float chance;
+	public int chance;
 }
 
 public class Deck : MonoBehaviour {
