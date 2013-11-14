@@ -10,5 +10,5 @@ public enum TileType {
 public class Tile : MonoBehaviour {
 
 	public TileType type		= TileType.Empty;
-	public 	int[]	connectors	= new int[4];
+	public int[]	connectors	= new int[4];
 }

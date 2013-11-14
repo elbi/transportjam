@@ -35,6 +35,7 @@ public class Player : MonoBehaviour {
 		for (int i = 0; i < deck.possibleCards.Length; ++i) {
 			if ((randomRoll - cardOffset) <= deck.possibleCards[i].chance) {
 				newCard = Instantiate (deck.possibleCards[i].card) as Card;
+				newCard.transform.parent = transform;
 				break;
 			}
 			else
@@ -61,5 +62,20 @@ public class Player : MonoBehaviour {
 		--cardsToDraw;
 		if (cardsToDraw > 0)
 			Draw (deck, cardsToDraw);
+	}
+
+	public void PlayCard (Card selectedCard) {
+		for (int slot = 0; slot < cards.Length; ++slot) {
+			if (cards[slot] == selectedCard)
+				cards[slot] = null;	
+		}
+	}
+
+	public Card SelectCard (Tile tile) {
+		for (int slot = 0; slot < cards.Length; ++slot) {
+			if (cards[slot].tile == tile)
+				return cards[slot];
+		}
+		return null;
 	}
 }
