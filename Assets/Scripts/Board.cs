@@ -126,10 +126,17 @@ public class Board : MonoBehaviour {
 		selectedTile = null;
 		actionsDone	 = 0;
 		
+		/* // hide enemy's hand
 		foreach (GameObject go in playerHands)
 			go.SetActive (false);
 			
 		playerHands[playerNumber].SetActive (true);
+		*/
+		
+		// show all hands
+		foreach (GameObject go in playerHands)
+			go.SetActive (true);
+			
 	}
 	
 	public void MoveTrain() {
