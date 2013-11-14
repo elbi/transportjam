@@ -3,11 +3,12 @@ using System.Collections;
 
 public enum TileType {
 	Empty	= 0,
-	Straight,
-	SimpleCurve,
+	Track,
+	Special
 }
 
 public class Tile : MonoBehaviour {
 
-		public 	int[]	connectors	= new int[4];
+	public TileType type		= TileType.Empty;
+	public 	int[]	connectors	= new int[4];
 }

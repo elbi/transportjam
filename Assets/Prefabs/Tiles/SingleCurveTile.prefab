@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5fb3ae631b754aa19a50b9e18c01457, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
   connectors: 01000000010000000000000000000000
 --- !u!1001 &100100000
 Prefab:
