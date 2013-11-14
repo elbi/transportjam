@@ -50,6 +50,9 @@ public class Board : MonoBehaviour {
 				tile = Instantiate (tiles [(int)TileType.Empty]) as Tile;
 				tile.transform.parent = transform;
 				tile.transform.localPosition = new Vector3 (i * 1f, j * 1f, 0f);
+				tile.x = i;
+				tile.y = j;
+				grid[i,j] = tile;
 			}
 		}
 		
@@ -135,7 +138,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void MoveTrain() {
-		bool path = pathChecker.Search(new Vector2(0,0), new Vector2(3,3), selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
+		bool path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
 	}
 	
 	public void EndTurn () {
@@ -191,6 +194,15 @@ public class Board : MonoBehaviour {
 //		tile = card.tile;
 		selectedCard = null;
 		tile.gameObject.SetActive (false);
+		
+		card.tile.x = tile.x;
+		card.tile.y = tile.y;
+		
+		grid[tile.x, tile.y] = card.tile;
+		
+		//DEBUG ONLY: CHECK PATH TO TEST
+		bool path = pathChecker.Search(0,0,1,1, 1, grid, currentLevel.width, currentLevel.height);
+		Debug.Log("Checking path from (0,0) to (1,1): " + path);
 	}
 	
 	

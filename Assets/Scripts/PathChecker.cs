@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PathChecker
 {	
-	public bool Search(Vector2 start, Vector2 finish, int connection, Tile[,] grid, int width, int height)
+	public bool Search(int startX, int startY, int finishX, int finishY, int connection, Tile[,] grid, int width, int height)
     {
 		bool[,] alreadySearched = new bool[width,height];
-		bool pathFound = false;//Solve(start.x, start.y, finish.x, finish.y, grid, width, height, connection, alreadySearched);
+		bool pathFound = Solve(startX, startY, finishX, finishY, grid, width, height, connection, alreadySearched);
 		
 		return pathFound;
     }
@@ -15,14 +15,14 @@ public class PathChecker
 	private bool Solve(int currentX, int currentY, int finishX, int finishY, Tile[,] grid, int width, int height, int connection, bool[,] alreadySearched) {
 		bool correctPath = false;
         bool shouldCheck = true;
-
-		Tile tile = grid[currentX, currentY];
 		
 		//Check for out of boundaries
         if (currentX >= width || currentX < 0 || currentY >= height || currentY < 0)
             shouldCheck = false;
         else
         {
+			Tile tile = grid[currentX, currentY];
+			
 			//check finish
 	        if (currentX == finishX && currentY == finishY) {
 	            correctPath = true;
