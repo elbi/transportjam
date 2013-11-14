@@ -10,6 +10,8 @@ public class Board : MonoBehaviour {
 	public GameObject checkpointPrefab;
 	public Deck[]	decks;
 	public Player	playerPrefab;
+	public GameObject rotateRight;
+	public GameObject rotateLeft;
 	private Tile[,]	grid		= null;
 	private int[,]  trainGrid	= null;
 	private Player[] players;
@@ -21,6 +23,8 @@ public class Board : MonoBehaviour {
 //	private int		localPlayer;
 	private Card	selectedCard;
 	private Tile	selectedTile;
+	
+	private int		actionsDone = 0;
 	
 
 	public void Start () {
@@ -41,6 +45,7 @@ public class Board : MonoBehaviour {
 			for (int j = 0; j < level.height; ++j) {
 				Tile tile = grid [i,j];
 				tile = Instantiate (tiles [(int)TileType.Empty]) as Tile;
+				tile.AddRotationPrefabs (rotateLeft, rotateRight);
 				tile.transform.parent = transform;
 				tile.transform.localPosition = new Vector3 (i * 1f, j * 1f, 0f);
 			}
@@ -96,22 +101,11 @@ public class Board : MonoBehaviour {
 		players = new Player[numPlayers];
 		for (int i = 0; i < numPlayers; ++i) {
 			players[i] = Instantiate (playerPrefab) as Player;
-			players[i].Draw (decks[0], 5);
+			players[i].Draw (5, decks[0]);
 			
 			float offset = 0;
-			foreach (Card card in players[i].Cards) {
-				if (card.tile != null) {
-					Card cardObject = Instantiate (card) as Card;
-					cardObject.transform.parent = playerHands[i].transform;
-					cardObject.transform.localPosition = new Vector3 (offset, 0f, 0f);
-					cardObject.slot = i;
-					
-					Tile cardTile = Instantiate (card.tile) as Tile;
-					cardTile.transform.parent = cardObject.transform;
-					cardTile.transform.localPosition = Vector3.zero;
-					offset += 1.2f;
-				}
-			}
+			players[i].Init (this);
+			players[i].RenderCards (playerHands[i]);
 		}
 	}
 	
@@ -120,6 +114,7 @@ public class Board : MonoBehaviour {
 		
 		selectedCard = null;
 		selectedTile = null;
+		actionsDone	 = 0;
 		
 		foreach (GameObject go in playerHands)
 			go.SetActive (false);
@@ -128,6 +123,9 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void EndTurn () {
+		players[currentPlayer].RefillHand ();
+		currentPlayer = (currentPlayer + 1) % players.Length;
+		StartTurn (currentPlayer);
 		
 	}
 	
@@ -139,14 +137,19 @@ public class Board : MonoBehaviour {
 			if (hit.collider != null) {
 				Tile tile = hit.collider.transform.GetComponent<Tile>();
 				
-				if (tile == null)
-					return;
-														
-				// did we click on a card in hand or on a tile on the grid?
-				if (tile.transform.parent.GetComponent<Board>() != null)
-					SelectTileOnGrid (tile);
+				if (tile != null) {														
+					// did we click on a card in hand or on a tile on the grid?
+					if (tile.transform.parent.GetComponent<Board>() != null)
+						SelectTileOnGrid (tile);
+					else
+						SelectTileOnHand (tile);
+				}
+				else if (hit.collider.gameObject.name == "RotateLeft")
+					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), -1);
+				else if (hit.collider.gameObject.name == "RotateRight")
+					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), 1);
 				else
-					SelectTileOnHand (tile);
+					return;
 			}
 		}
 	}
@@ -154,12 +157,23 @@ public class Board : MonoBehaviour {
 	private void SelectTileOnGrid (Tile tile) {
 		Debug.Log ("selected tile on grid: " + tile);
 		
+		if (selectedTile != null)
+			selectedTile.ShowRotationPrefabs (false);
+		
 		if (selectedCard != null && tile.type == TileType.Empty) {
 			PlaceCardOnGrid (selectedCard, tile);
+		}
+		else if (tile.type != TileType.Empty) {
+			selectedCard = null;
+			tile.ShowRotationPrefabs (true, actionsDone);
+			selectedTile = tile;
 		}
 	}
 	
 	private void SelectTileOnHand (Tile tile) {
+		if (selectedTile != null)
+			selectedTile.ShowRotationPrefabs (false);
+			
 		Debug.Log ("selected tile on hand: " + tile);
 		selectedCard = tile.transform.parent.GetComponent<Card>();
 	}
@@ -176,12 +190,18 @@ public class Board : MonoBehaviour {
 		tileTransform.parent = tile.transform.parent;
 		tileTransform.localPosition = tile.transform.localPosition;
 						
-		players[currentPlayer].PlayCard (selectedCard);
+		players[currentPlayer].PlayCard (selectedCard.slot);
 //		tile = card.tile;
+		Destroy (selectedCard);
 		selectedCard = null;
 		tile.gameObject.SetActive (false);
+		
+		++actionsDone;
+		if (actionsDone >= 2)
+			EndTurn ();
 	}
 	
-	
-		
+	void RotateTileOnGrid (Tile tile, int rotation) {
+		tile.Rotate (rotation);
+	}
 }

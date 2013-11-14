@@ -11,4 +11,5 @@ public class Card : MonoBehaviour {
 	public CardType cardType;
 	public Tile		tile;
 	public int 		slot;
+	public bool 	isRenderedAlready = false;
 }
