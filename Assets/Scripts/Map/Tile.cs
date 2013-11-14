@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public enum TileType {
 	Empty	= 0,
@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour {
 
 	public TileType type		= TileType.Empty;
 	public int[]	connectors	= new int[4];
+	public int x;
+	public int y;
 	
 	private GameObject left;
 	private GameObject right;
@@ -23,7 +25,7 @@ public class Tile : MonoBehaviour {
 		left.transform.localPosition = new Vector3 (-0.5f, 0f, -1f);
 		
 		right = Instantiate (rotateRight) as GameObject;
-		left.name = "RotateRight";
+		right.name = "RotateRight";
 		right.transform.parent = transform;
 		right.transform.localPosition = new Vector3 (0.5f, 0f, -1f);
 	}

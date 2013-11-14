@@ -20,9 +20,14 @@ public class Board : MonoBehaviour {
 	public GameObject[] playerHands = null;
 	
 	private int		currentPlayer;
+	private Level 	currentLevel;
+	
 //	private int		localPlayer;
 	private Card	selectedCard;
 	private Tile	selectedTile;
+	private Train	selectedTrain;
+	
+	private PathChecker pathChecker = new PathChecker();
 	
 	private int		actionsDone = 0;
 	
@@ -39,6 +44,8 @@ public class Board : MonoBehaviour {
 	private void LoadLevel (int levelNumber) {
 		Level level = levels [levelNumber];
 		
+		currentLevel = level;
+		
 		grid = new Tile [level.width, level.height];
 		
 		for (int i = 0; i < level.width; ++i) {
@@ -48,6 +55,9 @@ public class Board : MonoBehaviour {
 				tile.AddRotationPrefabs (rotateLeft, rotateRight);
 				tile.transform.parent = transform;
 				tile.transform.localPosition = new Vector3 (i * 1f, j * 1f, 0f);
+				tile.x = i;
+				tile.y = j;
+				grid[i,j] = tile;
 			}
 		}
 		
@@ -122,6 +132,10 @@ public class Board : MonoBehaviour {
 		playerHands[playerNumber].SetActive (true);
 	}
 	
+	public void MoveTrain() {
+		bool path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
+	}
+	
 	public void EndTurn () {
 		players[currentPlayer].RefillHand ();
 		currentPlayer = (currentPlayer + 1) % players.Length;
@@ -145,9 +159,9 @@ public class Board : MonoBehaviour {
 						SelectTileOnHand (tile);
 				}
 				else if (hit.collider.gameObject.name == "RotateLeft")
-					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), -1);
-				else if (hit.collider.gameObject.name == "RotateRight")
 					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), 1);
+				else if (hit.collider.gameObject.name == "RotateRight")
+					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), -1);
 				else
 					return;
 			}
@@ -195,6 +209,16 @@ public class Board : MonoBehaviour {
 		Destroy (selectedCard);
 		selectedCard = null;
 		tile.gameObject.SetActive (false);
+		
+			
+		card.tile.x = tile.x;
+		card.tile.y = tile.y;
+		
+		grid[tile.x, tile.y] = card.tile;
+		
+		//DEBUG ONLY: CHECK PATH TO TEST
+		bool path = pathChecker.Search(0,0,1,1, 1, grid, currentLevel.width, currentLevel.height);
+		Debug.Log("Checking path from (0,0) to (1,1): " + path);
 		
 		++actionsDone;
 		if (actionsDone >= 2)
