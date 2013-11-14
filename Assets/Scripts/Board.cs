@@ -38,12 +38,14 @@ public class Board : MonoBehaviour {
 			for (int j = 0; j < level.height; ++j) {
 				Tile tile = grid [i,j];
 				tile = Instantiate (tiles [(int)TileType.Empty]) as Tile;
+				tile.transform.parent = transform;
 				tile.transform.localPosition = new Vector3 (i * 1f, j * 1f, 0f);
-				tile.renderer.material.color = new Color (new System.Random ().Next (2), new System.Random ().Next (2), new System.Random ().Next (2), 1f);
 			}
 		}
 		
 		LoadPlayers (level.numPlayers);
+		
+		StartTurn (0);
 	}
 	
 	private void LoadPlayers (int numPlayers) {
@@ -56,9 +58,14 @@ public class Board : MonoBehaviour {
 			float offset = 0;
 			foreach (Card card in players[i].Cards) {
 				if (card.tile != null) {
+					Card cardObject = Instantiate (card) as Card;
+					cardObject.transform.parent = playerHands[i].transform;
+					cardObject.transform.localPosition = new Vector3 (offset, 0f, 0f);
+					cardObject.slot = i;
+					
 					Tile cardTile = Instantiate (card.tile) as Tile;
-					cardTile.transform.parent = playerHands[i].transform;
-					cardTile.transform.localPosition = new Vector3 (offset, 0f, 0f);
+					cardTile.transform.parent = cardObject.transform;
+					cardTile.transform.localPosition = Vector3.zero;
 					offset += 1.2f;
 				}
 			}
@@ -71,7 +78,10 @@ public class Board : MonoBehaviour {
 		selectedCard = null;
 		selectedTile = null;
 		
-		
+		foreach (GameObject go in playerHands)
+			go.SetActive (false);
+			
+		playerHands[playerNumber].SetActive (true);
 	}
 	
 	public void EndTurn () {
@@ -79,9 +89,54 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void OnTap (Gesture gesture) {
-		Debug.Log ("tap recognized!");
 		
-		// TODO: ray cast to see what we clicked on
+		RaycastHit hit = new RaycastHit ();
+		if (Physics.Raycast(Camera.main.ScreenPointToRay (gesture.Position), out hit, 5000.0f))
+		{
+			if (hit.collider != null) {
+				Tile tile = hit.collider.transform.GetComponent<Tile>();
+				
+				if (tile == null)
+					return;
+														
+				// did we click on a card in hand or on a tile on the grid?
+				if (tile.transform.parent.GetComponent<Board>() != null)
+					SelectTileOnGrid (tile);
+				else
+					SelectTileOnHand (tile);
+			}
+		}
+	}
+	
+	private void SelectTileOnGrid (Tile tile) {
+		Debug.Log ("selected tile on grid: " + tile);
+		
+		if (selectedCard != null && tile.type == TileType.Empty) {
+			PlaceCardOnGrid (selectedCard, tile);
+		}
+	}
+	
+	private void SelectTileOnHand (Tile tile) {
+		Debug.Log ("selected tile on hand: " + tile);
+		selectedCard = tile.transform.parent.GetComponent<Card>();
+	}
+	
+	private void PlaceCardOnGrid (Card card, Tile tile) {
+		Debug.Log ("Placing tile on grid: " + card.tile);
+		
+		// move card's tile to new position
+		Transform tileTransform = null;
+		foreach (Transform child in card.transform) {
+			if (child.GetComponent<Tile>() != null)
+				tileTransform = child.transform;
+		}
+		tileTransform.parent = tile.transform.parent;
+		tileTransform.localPosition = tile.transform.localPosition;
+						
+		players[currentPlayer].PlayCard (selectedCard);
+//		tile = card.tile;
+		selectedCard = null;
+		tile.gameObject.SetActive (false);
 	}
 	
 	
