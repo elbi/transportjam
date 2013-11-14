@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Board : MonoBehaviour {
@@ -142,7 +143,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void MoveTrain() {
-		bool path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
+		List<Vector2> path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
 	}
 	
 	public void EndTurn () {
@@ -239,16 +240,32 @@ public class Board : MonoBehaviour {
 		grid[tile.x, tile.y] = card.tile;
 		
 		//DEBUG ONLY: CHECK PATH TO TEST
-		bool path = pathChecker.Search(0,0,1,1, 1, grid, currentLevel.width, currentLevel.height);
-		Debug.Log("Checking path from (0,0) to (1,1): " + path);
+
+		List<Vector2> path = pathChecker.Search(0,0,3,3, 1, grid, currentLevel.width, currentLevel.height);
+		Debug.Log("Checking path from (0,0) to (3,3): " + (path != null));
 		
+		if (path != null) {
+			Debug.Log("Extracting path from (0,0) to (3,3): " + getPathString(path));
+		}
+				
 		++actionsDone;
 		if (actionsDone >= 2)
 			EndTurn ();
 	}
 	
+	private String getPathString(IList<Vector2> path) {
+		var pathString = String.Empty;
+		
+		foreach (Vector2 pathNode in path) {
+			pathString += "(" + pathNode.x + "," + pathNode.y + "),";
+		}
+		
+		return pathString;
+	}	
+
 	void RotateTileOnGrid (Tile tile, int rotation) {
 		didRotate = true;
 		tile.Rotate (rotation);
 	}
+
 }
