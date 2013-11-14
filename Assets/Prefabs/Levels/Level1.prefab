@@ -53,7 +53,7 @@ MonoBehaviour:
   exitPoints:
   - x: 6
     y: 6
-    playerNum: 4
+    playerNum: 1
     isExit: 1
   - x: 0
     y: 6

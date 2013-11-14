@@ -6,6 +6,8 @@ public class Board : MonoBehaviour {
 
 	public Level[]	levels;
 	public Tile[]	tiles;
+	public CheckPoint checkpoints;
+	public GameObject checkpointPrefab;
 	public Deck[]	decks;
 	public Player	playerPrefab;
 	private Tile[,]	grid		= null;
@@ -41,6 +43,22 @@ public class Board : MonoBehaviour {
 				tile.transform.localPosition = new Vector3 (i * 1f, j * 1f, 0f);
 				tile.renderer.material.color = new Color (new System.Random ().Next (2), new System.Random ().Next (2), new System.Random ().Next (2), 1f);
 			}
+		}
+		
+		for (int k = 0; k < level.entryPoints.Length; ++k) {
+			CheckPoint start = level.entryPoints[k];
+			
+			GameObject startInstance = Instantiate(checkpointPrefab) as GameObject;
+			startInstance.transform.localPosition = new Vector3 (k * 1f, k * 1f, 0f);
+			startInstance.renderer.material.color = new Color (new System.Random ().Next (0), new System.Random ().Next (0), new System.Random ().Next (0), 1f);
+		}
+		
+		for (int l = 0; l < level.exitPoints.Length; ++l) {
+			CheckPoint exit = level.exitPoints[l];
+			
+			GameObject exitInstance = Instantiate(checkpointPrefab) as GameObject;
+			exitInstance.transform.localPosition = new Vector3 (l * 1f, l * 1f, 0f);
+			exitInstance.renderer.material.color = new Color (new System.Random ().Next (0), new System.Random ().Next (0), new System.Random ().Next (0), 1f);
 		}
 		
 		LoadPlayers (level.numPlayers);
