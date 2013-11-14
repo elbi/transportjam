@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Board : MonoBehaviour {
@@ -138,7 +139,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void MoveTrain() {
-		bool path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
+		IList<Vector2> path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
 	}
 	
 	public void EndTurn () {
@@ -201,10 +202,21 @@ public class Board : MonoBehaviour {
 		grid[tile.x, tile.y] = card.tile;
 		
 		//DEBUG ONLY: CHECK PATH TO TEST
-		bool path = pathChecker.Search(0,0,1,1, 1, grid, currentLevel.width, currentLevel.height);
-		Debug.Log("Checking path from (0,0) to (1,1): " + path);
+		IList<Vector2> path = pathChecker.Search(0,0,1,1, 1, grid, currentLevel.width, currentLevel.height);
+		Debug.Log("Checking path from (0,0) to (1,1): " + (path != null));
+		
+		if (path != null) {
+			Debug.Log("Extracting path from (0,0) to (1,1): " + getPathString(path));
+		}
 	}
 	
-	
+	private String getPathString(IList<Vector2> path) {
+		var pathString = String.Empty;
 		
+		foreach (Vector2 pathNode in path) {
+			pathString += "(" + pathNode.x + "," + pathNode.y + "),";
+		}
+		
+		return pathString;
+	}	
 }
