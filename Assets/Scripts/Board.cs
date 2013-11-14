@@ -13,6 +13,7 @@ public class Board : MonoBehaviour {
 	private Tile[,]	grid		= null;
 	private int[,]  trainGrid	= null;
 	private Player[] players;
+	//private Train[] trains;
 	
 	public GameObject[] playerHands = null;
 	
@@ -45,11 +46,24 @@ public class Board : MonoBehaviour {
 			}
 		}
 		
+		float offsetX = 0;
+		float offsetY = 0;
+		
 		for (int k = 0; k < level.entryPoints.Length; ++k) {
 			CheckPoint start = level.entryPoints[k];
 			
+			offsetX = start.x * 1f;
+			offsetY = start.y * 1f;
+			
+			switch (start.direction) {
+				case DirectionType.Down: offsetY -= 1f; break;
+				case DirectionType.Up: offsetY += 1f; break;
+				case DirectionType.Left: offsetX += 1f; break;
+				case DirectionType.Right: offsetY -= 1f; break;
+			}
+			
 			GameObject startInstance = Instantiate(checkpointPrefab) as GameObject;
-			startInstance.transform.localPosition = new Vector3 (k * 1f, k * 1f, 0f);
+			startInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
 			startInstance.renderer.material.color = new Color (new System.Random ().Next (0), new System.Random ().Next (0), new System.Random ().Next (0), 1f);
 		}
 		
@@ -57,8 +71,19 @@ public class Board : MonoBehaviour {
 			CheckPoint exit = level.exitPoints[l];
 			
 			GameObject exitInstance = Instantiate(checkpointPrefab) as GameObject;
-			exitInstance.transform.localPosition = new Vector3 (l * 1f, l * 1f, 0f);
-			exitInstance.renderer.material.color = new Color (new System.Random ().Next (0), new System.Random ().Next (0), new System.Random ().Next (0), 1f);
+			
+			offsetX = exit.x * 1f;
+			offsetY = exit.y * 1f;
+			
+			switch (exit.direction) {
+				case DirectionType.Down: offsetY -= 1f; break;
+				case DirectionType.Up: offsetY += 1f; break;
+				case DirectionType.Left: offsetX += 1f; break;
+				case DirectionType.Right: offsetY -= 1f; break;
+			}
+			
+			exitInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
+			exitInstance.renderer.material.color = new Color (new System.Random ().Next (20), new System.Random ().Next (20), new System.Random ().Next (20), 1f);
 		}
 		
 		LoadPlayers (level.numPlayers);
