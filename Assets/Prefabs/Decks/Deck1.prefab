@@ -40,13 +40,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleCards:
   - card: {fileID: 11400000, guid: e962fd97db3984b73b1426ad1722fe2a, type: 2}
-    chance: 10
+    chance: 20
   - card: {fileID: 11400000, guid: 87669d524f2804364b29927812924d42, type: 2}
-    chance: 10
+    chance: 20
   - card: {fileID: 11400000, guid: 9c22cf9c9349b433f860d368460693e1, type: 2}
     chance: 10
   - card: {fileID: 11400000, guid: 3284f664b803d4c9b99ea7735a63d4d0, type: 2}
-    chance: 10
+    chance: 5
   - card: {fileID: 11400000, guid: d67686f3c4d394b81a783c177eb936b9, type: 2}
     chance: 10
   - card: {fileID: 11400000, guid: b099ad736e94a4271835e8ade2882fc4, type: 2}
@@ -54,9 +54,9 @@ MonoBehaviour:
   - card: {fileID: 11400000, guid: 07d6069db6a8646fba0b5030488a1beb, type: 2}
     chance: 10
   - card: {fileID: 11400000, guid: 5cf9f9abc00594b9f89034453edfe100, type: 2}
-    chance: 10
+    chance: 0
   - card: {fileID: 11400000, guid: 98661d094db664dce993d80817b87ad6, type: 2}
-    chance: 10
+    chance: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

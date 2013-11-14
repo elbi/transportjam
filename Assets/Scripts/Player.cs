@@ -4,13 +4,25 @@ using System;
 
 public class Player : MonoBehaviour {
 
-	public Card[]	cards		= null;
+	private Card[]	cards		= null;
+
+	public Card[] Cards {
+		get {
+			return cards;
+		}
+		set {
+			cards = value;
+		}
+	}
 	
 	public void Start () {
-		cards = new Card[5];
 	}
 	
 	public void Draw (Deck deck, int cardsToDraw) {
+	
+		if (cards == null)
+			cards = new Card[5];
+	
 		int maxRoll = 0;
 		foreach (CardPercentage card in deck.possibleCards) {
 			maxRoll += card.chance;
@@ -21,8 +33,10 @@ public class Player : MonoBehaviour {
 		Card newCard = null;
 		int cardOffset = 0;
 		for (int i = 0; i < deck.possibleCards.Length; ++i) {
-			if ((randomRoll - cardOffset) <= deck.possibleCards[i].chance)
+			if ((randomRoll - cardOffset) <= deck.possibleCards[i].chance) {
 				newCard = Instantiate (deck.possibleCards[i].card) as Card;
+				break;
+			}
 			else
 				cardOffset += deck.possibleCards[i].chance;
 		}
@@ -32,14 +46,17 @@ public class Player : MonoBehaviour {
 			return;
 		}
 		
-		for (int slot = 0; slot < cards.Length; ++slot) {
+		for (int slot = 0; slot < 5; ++slot) {
 			if (cards[slot] == null) {
+				Debug.Log ("Giving card to player: " + newCard.ToString ());
 				cards[slot] = newCard;
 				break;
 			}
+//			else {
+//				Debug.Log ("slot filled with: " + cards[slot].ToString());
+//			}
 		}
 		
-		Debug.Log ("Giving card to player: " + newCard.ToString ());
 		
 		--cardsToDraw;
 		if (cardsToDraw > 0)
