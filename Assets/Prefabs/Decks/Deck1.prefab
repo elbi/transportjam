@@ -52,7 +52,7 @@ MonoBehaviour:
   - card: {fileID: 11400000, guid: b099ad736e94a4271835e8ade2882fc4, type: 2}
     chance: 10
   - card: {fileID: 11400000, guid: 07d6069db6a8646fba0b5030488a1beb, type: 2}
-    chance: 10
+    chance: 0
   - card: {fileID: 11400000, guid: 5cf9f9abc00594b9f89034453edfe100, type: 2}
     chance: 0
   - card: {fileID: 11400000, guid: 98661d094db664dce993d80817b87ad6, type: 2}
