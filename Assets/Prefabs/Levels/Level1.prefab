@@ -46,19 +46,23 @@ MonoBehaviour:
     y: 0
     playerNum: 1
     isExit: 0
+    direction: 0
   - x: 6
     y: 0
     playerNum: 2
     isExit: 0
+    direction: 0
   exitPoints:
   - x: 6
     y: 6
-    playerNum: 4
+    playerNum: 1
     isExit: 1
+    direction: 1
   - x: 0
     y: 6
     playerNum: 2
     isExit: 1
+    direction: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
