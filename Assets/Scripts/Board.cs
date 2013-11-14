@@ -18,9 +18,14 @@ public class Board : MonoBehaviour {
 	public GameObject[] playerHands = null;
 	
 	private int		currentPlayer;
+	private Level 	currentLevel;
+	
 //	private int		localPlayer;
 	private Card	selectedCard;
 	private Tile	selectedTile;
+	private Train	selectedTrain;
+	
+	private PathChecker pathChecker = new PathChecker();
 	
 
 	public void Start () {
@@ -34,6 +39,8 @@ public class Board : MonoBehaviour {
 		
 	private void LoadLevel (int levelNumber) {
 		Level level = levels [levelNumber];
+		
+		currentLevel = level;
 		
 		grid = new Tile [level.width, level.height];
 		
@@ -125,6 +132,10 @@ public class Board : MonoBehaviour {
 			go.SetActive (false);
 			
 		playerHands[playerNumber].SetActive (true);
+	}
+	
+	public void MoveTrain() {
+		bool path = pathChecker.Search(new Vector2(0,0), new Vector2(3,3), selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
 	}
 	
 	public void EndTurn () {
