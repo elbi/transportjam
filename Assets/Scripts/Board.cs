@@ -176,7 +176,7 @@ public class Board : MonoBehaviour {
 			Debug.Log("Extracting path: " + getPathString(path));
 								
 			selectedTrain = null;
-			tile.gameObject.SetActive (false);
+			//tile.gameObject.SetActive (false);
 				
 			train.Move(tile.x, tile.y, path);
 			

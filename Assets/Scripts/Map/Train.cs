@@ -30,7 +30,7 @@ public class Train : MonoBehaviour
 	
 	public void Update() {
 		if (moving) {
-			transform.localPosition = new Vector3 (x * 1f, y * 1f, 0f);
+			transform.localPosition = new Vector3 (x * 1f, y * 1f, -1f);
 			moving = false;
 			/*if (path != null && pathIterator == null) {
 				pathIterator = path.GetEnumerator();
