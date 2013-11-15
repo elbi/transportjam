@@ -32,9 +32,12 @@ public class Board : MonoBehaviour {
 	private Tile	selectedTile;
 	private Train	selectedTrain;
 	
+	private bool isRotatingOnHand = false;
+	
 	private PathChecker pathChecker = new PathChecker();
 	
 	private int		actionsDone = 0;
+	private bool	didRotate = false;
 	
 
 	public void Start () {
@@ -135,17 +138,18 @@ public class Board : MonoBehaviour {
 		selectedTile = null;
 		actionsDone	 = 0;
 		
-		/* // hide enemy's hand
+		// hide enemy's hand
 		foreach (GameObject go in playerHands)
 			go.SetActive (false);
 			
 		playerHands[playerNumber].SetActive (true);
-		*/
 		
+		
+		/*
 		// show all hands
 		foreach (GameObject go in playerHands)
 			go.SetActive (true);
-			
+		*/	
 	}
 	
 	public void MoveTrain() {
@@ -153,10 +157,13 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void EndTurn () {
+		
+		if (selectedTile != null)
+			selectedTile.ShowRotationPrefabs (false);
+			
 		players[currentPlayer].RefillHand ();
 		currentPlayer = (currentPlayer + 1) % players.Length;
 		StartTurn (currentPlayer);
-		
 	}
 	
 	public void OnTap (Gesture gesture) {
@@ -165,9 +172,21 @@ public class Board : MonoBehaviour {
 		if (Physics.Raycast(Camera.main.ScreenPointToRay (gesture.Position), out hit, 5000.0f))
 		{
 			if (hit.collider != null) {
+			
 				Tile tile = hit.collider.transform.GetComponent<Tile>();
 				
-				if (tile != null) {														
+				if (tile != null) {	
+					if (didRotate) {
+						didRotate = false;
+						if (isRotatingOnHand == false)
+							actionsDone += 2;
+						isRotatingOnHand = false;
+						if (actionsDone >= 2) {
+							EndTurn ();
+							return;
+						}
+					}			
+															
 					// did we click on a card in hand or on a tile on the grid?
 					if (tile.transform.parent.GetComponent<Board>() != null)
 						SelectTileOnGrid (tile);
@@ -210,6 +229,10 @@ public class Board : MonoBehaviour {
 		if (selectedTile != null)
 			selectedTile.ShowRotationPrefabs (false);
 			
+		tile.ShowRotationPrefabs (true, 0);
+		selectedTile = tile;
+		isRotatingOnHand = true;
+			
 		Debug.Log ("selected tile on hand: " + tile);
 		selectedCard = tile.transform.parent.GetComponent<Card>();
 	}
@@ -228,10 +251,9 @@ public class Board : MonoBehaviour {
 						
 		players[currentPlayer].PlayCard (selectedCard.slot);
 //		tile = card.tile;
-		Destroy (selectedCard);
+//		Destroy (selectedCard);
 		selectedCard = null;
 		tile.gameObject.SetActive (false);
-		
 			
 		card.tile.x = tile.x;
 		card.tile.y = tile.y;
@@ -263,6 +285,7 @@ public class Board : MonoBehaviour {
 	}	
 
 	void RotateTileOnGrid (Tile tile, int rotation) {
+		didRotate = true;
 		tile.Rotate (rotation);
 	}
 

@@ -14,27 +14,40 @@ public class Tile : MonoBehaviour {
 	public int x;
 	public int y;
 	
-	private GameObject left;
+	private bool wantsToShowRotation = false;
+	
+//	private GameObject left;
 	private GameObject right;
 	
 	public void AddRotationPrefabs (GameObject rotateLeft, GameObject rotateRight)
 	{
-		left = Instantiate (rotateLeft) as GameObject;
-		left.name = "RotateLeft";
-		left.transform.parent = transform;
-		left.transform.localPosition = new Vector3 (-0.5f, 0f, -1f);
+//		left = Instantiate (rotateLeft) as GameObject;
+//		left.name = "RotateLeft";
+//		left.transform.parent = transform;
+//		left.transform.localPosition = new Vector3 (-0.5f, 0f, -1f);
 		
 		right = Instantiate (rotateRight) as GameObject;
 		right.name = "RotateRight";
 		right.transform.parent = transform;
-		right.transform.localPosition = new Vector3 (0.5f, 0f, -1f);
+		right.transform.localPosition = new Vector3 (0f, 0f, -1f);
+	}
+	
+	public void Update () {
+		if (wantsToShowRotation == true)
+			ShowRotationPrefabs (true, 0);
 	}
 	
 	public void ShowRotationPrefabs (bool doShow, int actionsDone = 0) {
 		if (actionsDone > 0)
 			doShow = false;
-		right.SetActive (doShow);
-		left.SetActive (doShow);
+		
+		if (right != null) {
+			right.SetActive (doShow);
+			wantsToShowRotation = false;
+		}
+		else
+			wantsToShowRotation = true;
+//		left.SetActive (doShow);
 	}
 
 	public void Rotate (int rotation) {
