@@ -80,7 +80,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
-  connectors: 01000000010000000100000000000000
+  connectors: 01000000010000000000000001000000
+  x: 4
+  y: 3
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
