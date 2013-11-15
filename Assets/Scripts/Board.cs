@@ -28,6 +28,8 @@ public class Board : MonoBehaviour {
 	private Tile	selectedTile;
 	private Train	selectedTrain;
 	
+	private bool isRotatingOnHand = false;
+	
 	private PathChecker pathChecker = new PathChecker();
 	
 	private int		actionsDone = 0;
@@ -168,7 +170,9 @@ public class Board : MonoBehaviour {
 				if (tile != null) {	
 					if (didRotate) {
 						didRotate = false;
-						actionsDone += 2;
+						if (isRotatingOnHand == false)
+							actionsDone += 2;
+						isRotatingOnHand = false;
 						if (actionsDone >= 2) {
 							EndTurn ();
 							return;
@@ -211,6 +215,10 @@ public class Board : MonoBehaviour {
 		if (selectedTile != null)
 			selectedTile.ShowRotationPrefabs (false);
 			
+		tile.ShowRotationPrefabs (true, 0);
+		selectedTile = tile;
+		isRotatingOnHand = true;
+			
 		Debug.Log ("selected tile on hand: " + tile);
 		selectedCard = tile.transform.parent.GetComponent<Card>();
 	}
@@ -229,10 +237,9 @@ public class Board : MonoBehaviour {
 						
 		players[currentPlayer].PlayCard (selectedCard.slot);
 //		tile = card.tile;
-		Destroy (selectedCard);
+//		Destroy (selectedCard);
 		selectedCard = null;
 		tile.gameObject.SetActive (false);
-		
 			
 		card.tile.x = tile.x;
 		card.tile.y = tile.y;

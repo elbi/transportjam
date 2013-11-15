@@ -14,6 +14,8 @@ public class Tile : MonoBehaviour {
 	public int x;
 	public int y;
 	
+	private bool wantsToShowRotation = false;
+	
 //	private GameObject left;
 	private GameObject right;
 	
@@ -30,10 +32,21 @@ public class Tile : MonoBehaviour {
 		right.transform.localPosition = new Vector3 (0f, 0f, -1f);
 	}
 	
+	public void Update () {
+		if (wantsToShowRotation == true)
+			ShowRotationPrefabs (true, 0);
+	}
+	
 	public void ShowRotationPrefabs (bool doShow, int actionsDone = 0) {
 		if (actionsDone > 0)
 			doShow = false;
-		right.SetActive (doShow);
+		
+		if (right != null) {
+			right.SetActive (doShow);
+			wantsToShowRotation = false;
+		}
+		else
+			wantsToShowRotation = true;
 //		left.SetActive (doShow);
 	}
 
