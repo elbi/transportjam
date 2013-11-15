@@ -167,8 +167,23 @@ public class Board : MonoBehaviour {
 		*/	
 	}
 	
-	public void MoveTrain() {
-		List<Vector2> path = pathChecker.Search(0,0,1,1, selectedTrain.connection, 0, grid, currentLevel.width, currentLevel.height);
+	public void MoveTrain(Train train, Tile tile) {
+		List<Vector2> path = pathChecker.Search(train.x, train.y,tile.x,tile.y, selectedTrain.connection, 0, grid, currentLevel.width, currentLevel.height);
+		
+		Debug.Log("Checking path from (" + train.x + "," + train.y + ") to (" + tile.x + "," + tile.y + "): " + (path != null));
+		
+		if (path != null) {
+			Debug.Log("Extracting path: " + getPathString(path));
+								
+			selectedTrain = null;
+			//tile.gameObject.SetActive (false);
+				
+			train.Move(tile.x, tile.y, path);
+			
+			
+			Debug.Log("Moving train to destination");
+		}
+
 	}
 	
 	public void EndTurn () {
@@ -212,7 +227,7 @@ public class Board : MonoBehaviour {
 					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), 1);
 				else if (hit.collider.gameObject.name == "RotateRight")
 					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), -1);
-				else if (hit.collider.gameObject.name == "EmptyTrain")
+				else if (hit.collider.gameObject.name == "EmptyTrain(Clone)")
 					SelectTrainOnGrid(hit.collider.transform.GetComponent<Train>());
 				else
 					return;
@@ -221,6 +236,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	private void SelectTrainOnGrid(Train train) {
+		Debug.Log ("Selecting train");
 		selectedTrain = train;
 	}
 	
@@ -229,6 +245,11 @@ public class Board : MonoBehaviour {
 		
 		if (selectedTile != null)
 			selectedTile.ShowRotationPrefabs (false);
+		
+		if (selectedTrain != null) {
+			MoveTrain(selectedTrain, tile);
+			return;
+		}
 		
 		if (selectedCard != null && tile.type == TileType.Empty) {
 			PlaceCardOnGrid (selectedCard, tile);
@@ -274,15 +295,6 @@ public class Board : MonoBehaviour {
 		card.tile.y = tile.y;
 		
 		grid[tile.x, tile.y] = card.tile;
-		
-		//DEBUG ONLY: CHECK PATH TO TEST
-
-		List<Vector2> path = pathChecker.Search(0,0,3,3, 1, 0, grid, currentLevel.width, currentLevel.height);
-		Debug.Log("Checking path from (0,0) to (3,3): " + (path != null));
-		
-		if (path != null) {
-			Debug.Log("Extracting path from (0,0) to (3,3): " + getPathString(path));
-		}
 				
 		++actionsDone;
 		if (actionsDone >= 2)

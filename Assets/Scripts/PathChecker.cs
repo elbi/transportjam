@@ -37,9 +37,9 @@ public class PathChecker
 			
 			
 	        //Check obstacle
-	        if (grid[currentX, currentY].type == TileType.Empty || tile.connectors[connector] == connection) {
+	        /*if (grid[currentX, currentY].type == TileType.Empty || tile.connectors[connector] == connection) {
 	            shouldCheck = false;
-			}
+			}*/
 	
 	        //Check if previously searched
 	        if (alreadySearched[currentX, currentY])
