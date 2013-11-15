@@ -333,12 +333,13 @@ MonoBehaviour:
     playerNum: 1
     isExit: 0
     direction: 0
-  checkpointPrefab: {fileID: 100000, guid: 43d75ccb2a8ac4b7ab59a9977f2b813d, type: 2}
   decks:
   - {fileID: 11400000, guid: 221f18493c97642e9a8264cc19616472, type: 2}
-  playerPrefab: {fileID: 11400000, guid: d564730e09ff349529696a97794e7dd1, type: 2}
   rotateRight: {fileID: 100000, guid: 791376341c25d4d58ac9bfe51e0b38fa, type: 2}
   rotateLeft: {fileID: 100000, guid: 68ccd7f5966ee47138a9cfa999a32c9e, type: 2}
+  checkpointPrefab: {fileID: 100000, guid: 43d75ccb2a8ac4b7ab59a9977f2b813d, type: 2}
+  playerPrefab: {fileID: 11400000, guid: d564730e09ff349529696a97794e7dd1, type: 2}
+  trainPrefab: {fileID: 100000, guid: b4085ccd202604d8e89d2403787ee748, type: 2}
   playerHands:
   - {fileID: 1399538340}
   - {fileID: 1895402529}

@@ -8,15 +8,19 @@ public class Board : MonoBehaviour {
 	public Level[]	levels;
 	public Tile[]	tiles;
 	public CheckPoint checkpoints;
-	public GameObject checkpointPrefab;
+
 	public Deck[]	decks;
-	public Player	playerPrefab;
+
 	public GameObject rotateRight;
 	public GameObject rotateLeft;
 	private Tile[,]	grid		= null;
 	private int[,]  trainGrid	= null;
 	private Player[] players;
 	//private Train[] trains;
+	
+	public GameObject checkpointPrefab;
+	public Player	playerPrefab;
+	public GameObject trainPrefab;
 	
 	public GameObject[] playerHands = null;
 	
@@ -83,11 +87,22 @@ public class Board : MonoBehaviour {
 			
 			GameObject startInstance = Instantiate(checkpointPrefab) as GameObject;
 			startInstance.transform.Rotate (new Vector3 (0f, 0f, 180f));
-			startInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
-			if (start.playerNum == 1)
-				startInstance.renderer.material.color = new Color (1f, 0.4f, 0.4f, 1f);
-			else
-				startInstance.renderer.material.color = new Color (0.4f, 0.4f, 1f, 1f);
+			startInstance.transform.localPosition = new Vector3 (offsetX, offsetY, -0.5f);
+			
+			GameObject trainInstance = Instantiate(trainPrefab) as GameObject;
+			trainInstance.transform.localPosition = new Vector3 (offsetX, offsetY, -1f);
+			
+			if (start.playerNum == 1) {
+				startInstance.renderer.material.color = new Color (1f, 0.6f, 0.6f, 1f);
+				trainInstance.renderer.material.color = new Color (1f, 0.2f, 0.2f, 1f);
+			}
+			else {
+				startInstance.renderer.material.color = new Color (0.6f, 0.6f, 1f, 1f);
+				trainInstance.renderer.material.color = new Color (0.2f, 0.2f, 1f, 1f);
+			}
+				
+			
+			
 		}
 		
 		for (int l = 0; l < level.exitPoints.Length; ++l) {
@@ -106,7 +121,7 @@ public class Board : MonoBehaviour {
 			}
 			
 			
-			exitInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
+			exitInstance.transform.localPosition = new Vector3 (offsetX, offsetY, -0.5f);
 			if (exit.playerNum == 1)
 				exitInstance.renderer.material.color = new Color (1f, 0.1f, 0.1f, 1f);
 			else
@@ -153,7 +168,7 @@ public class Board : MonoBehaviour {
 	}
 	
 	public void MoveTrain() {
-		List<Vector2> path = pathChecker.Search(0,0,1,1, selectedTrain.connection, grid, currentLevel.width, currentLevel.height);
+		List<Vector2> path = pathChecker.Search(0,0,1,1, selectedTrain.connection, 0, grid, currentLevel.width, currentLevel.height);
 	}
 	
 	public void EndTurn () {
@@ -197,10 +212,16 @@ public class Board : MonoBehaviour {
 					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), 1);
 				else if (hit.collider.gameObject.name == "RotateRight")
 					RotateTileOnGrid (hit.collider.transform.parent.GetComponent<Tile>(), -1);
+				else if (hit.collider.gameObject.name == "EmptyTrain")
+					SelectTrainOnGrid(hit.collider.transform.GetComponent<Train>());
 				else
 					return;
 			}
 		}
+	}
+	
+	private void SelectTrainOnGrid(Train train) {
+		selectedTrain = train;
 	}
 	
 	private void SelectTileOnGrid (Tile tile) {
@@ -256,7 +277,7 @@ public class Board : MonoBehaviour {
 		
 		//DEBUG ONLY: CHECK PATH TO TEST
 
-		List<Vector2> path = pathChecker.Search(0,0,3,3, 1, grid, currentLevel.width, currentLevel.height);
+		List<Vector2> path = pathChecker.Search(0,0,3,3, 1, 0, grid, currentLevel.width, currentLevel.height);
 		Debug.Log("Checking path from (0,0) to (3,3): " + (path != null));
 		
 		if (path != null) {
