@@ -82,8 +82,12 @@ public class Board : MonoBehaviour {
 			}
 			
 			GameObject startInstance = Instantiate(checkpointPrefab) as GameObject;
+			startInstance.transform.Rotate (new Vector3 (0f, 0f, 180f));
 			startInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
-			startInstance.renderer.material.color = new Color (new System.Random ().Next (0), new System.Random ().Next (0), new System.Random ().Next (0), 1f);
+			if (start.playerNum == 1)
+				startInstance.renderer.material.color = new Color (1f, 0.4f, 0.4f, 1f);
+			else
+				startInstance.renderer.material.color = new Color (0.4f, 0.4f, 1f, 1f);
 		}
 		
 		for (int l = 0; l < level.exitPoints.Length; ++l) {
@@ -101,8 +105,12 @@ public class Board : MonoBehaviour {
 				case DirectionType.Right: offsetY -= 1f; break;
 			}
 			
+			
 			exitInstance.transform.localPosition = new Vector3 (offsetX, offsetY, 0f);
-			exitInstance.renderer.material.color = new Color (new System.Random ().Next (20), new System.Random ().Next (20), new System.Random ().Next (20), 1f);
+			if (exit.playerNum == 1)
+				exitInstance.renderer.material.color = new Color (1f, 0.1f, 0.1f, 1f);
+			else
+				exitInstance.renderer.material.color = new Color (0.1f, 0.1f, 1f, 1f);
 		}
 		
 		LoadPlayers (level.numPlayers);
