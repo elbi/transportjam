@@ -179,6 +179,7 @@ public class Board : MonoBehaviour {
 			//tile.gameObject.SetActive (false);
 				
 			train.Move(tile.x, tile.y, path);
+			Debug.Log ("Moving Train to tile " + tile.x + ", " + tile.y);
 			
 			
 			Debug.Log("Moving train to destination");
@@ -288,13 +289,13 @@ public class Board : MonoBehaviour {
 		players[currentPlayer].PlayCard (selectedCard.slot);
 //		tile = card.tile;
 //		Destroy (selectedCard);
-		selectedCard = null;
 		tile.gameObject.SetActive (false);
 			
-		card.tile.x = tile.x;
-		card.tile.y = tile.y;
+		tileTransform.GetComponent<Tile>().x = tile.x;
+		tileTransform.GetComponent<Tile>().y = tile.y;
 		
 		grid[tile.x, tile.y] = card.tile;
+		selectedCard = null;
 				
 		++actionsDone;
 		if (actionsDone >= 2)

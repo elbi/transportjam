@@ -11,8 +11,15 @@ public class Tile : MonoBehaviour {
 
 	public TileType type		= TileType.Empty;
 	public int[]	connectors	= new int[4];
-	public int x;
-	public int y;
+	private int X;
+	private int Y;
+	
+	public int x { get { return X; } set { 
+		X = value; 
+	} }
+	public int y { get { return Y; } set { 
+		Y = value; 
+	} }
 	
 	private bool wantsToShowRotation = false;
 	
